@@ -1,0 +1,6 @@
+{
+  "name": "GU/UNIQLO 個人選品型錄",
+  "description": "日系極簡風格的個人選品與台日比價紀錄網",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
