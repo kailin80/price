@@ -15,6 +15,9 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [dbError, setDbError] = useState<string | null>(null);
 
+  const [filterBrand, setFilterBrand] = useState<'ALL' | 'GU' | 'UQ'>('ALL');
+  const [sortOption, setSortOption] = useState<'NEWEST' | 'TWD_ASC' | 'TWD_DESC' | 'JPY_ASC' | 'JPY_DESC'>('NEWEST');
+
   const fetchProducts = useCallback(async () => {
     setLoading(true);
     setDbError(null);
@@ -30,6 +33,7 @@ export default function App() {
       // Postgres relies on snake_case standard. Map Supabase snake_case columns back to frontend camelCase
       const mappedProducts = (data || []).map((item: any) => ({
         id: item.id,
+        brand: item.brand || 'UQ', // Default to UQ if missing
         imageUrl: item.image_url || item.imageUrl,
         productCode: item.product_code || item.productCode,
         priceTwd: item.price_twd || item.priceTwd,
@@ -51,6 +55,7 @@ export default function App() {
     
     // Map camelCase to Postgres snake_case before inserting
     const dbPayload = {
+      brand: newProduct.brand,
       image_url: newProduct.imageUrl,
       product_code: newProduct.productCode,
       price_twd: newProduct.priceTwd,
@@ -86,6 +91,16 @@ export default function App() {
     }
   };
 
+  const displayedProducts = products
+    .filter((p) => filterBrand === 'ALL' || p.brand === filterBrand)
+    .sort((a, b) => {
+      if (sortOption === 'TWD_ASC') return a.priceTwd - b.priceTwd;
+      if (sortOption === 'TWD_DESC') return b.priceTwd - a.priceTwd;
+      if (sortOption === 'JPY_ASC') return a.priceJpy - b.priceJpy;
+      if (sortOption === 'JPY_DESC') return b.priceJpy - a.priceJpy;
+      return 0;
+    });
+
   return (
     <div className="min-h-screen bg-[#FDFDFD] text-[#1A1A1A] font-sans selection:bg-black selection:text-white flex flex-col">
       <Navbar />
@@ -94,9 +109,34 @@ export default function App() {
         <AddProductForm onAdd={handleAddProduct} />
         
         <section>
-          <div className="flex justify-between items-end mb-4">
-            <h2 className="text-xs uppercase tracking-widest text-[#999] font-semibold">現有選品清單 Catalog</h2>
-            <span className="text-[11px] text-[#999]">顯示 {products.length} 個項目</span>
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+            <div>
+              <h2 className="text-xs uppercase tracking-widest text-[#999] font-semibold mb-1">現有選品清單 Catalog</h2>
+              <span className="text-[11px] text-[#999]">顯示 {displayedProducts.length} 個項目</span>
+            </div>
+            
+            <div className="flex items-center gap-3 w-full md:w-auto">
+              <select 
+                value={filterBrand}
+                onChange={(e) => setFilterBrand(e.target.value as 'ALL' | 'GU' | 'UQ')}
+                className="text-xs border border-[#DDD] py-1.5 px-2 outline-none focus:border-black transition-colors bg-transparent flex-1 md:flex-none cursor-pointer"
+              >
+                <option value="ALL">全部品牌</option>
+                <option value="UQ">UNIQLO</option>
+                <option value="GU">GU</option>
+              </select>
+              <select 
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value as any)}
+                className="text-xs border border-[#DDD] py-1.5 px-2 outline-none focus:border-black transition-colors bg-transparent flex-1 md:flex-none cursor-pointer"
+              >
+                <option value="NEWEST">最新加入</option>
+                <option value="TWD_ASC">台幣售價 (低到高)</option>
+                <option value="TWD_DESC">台幣售價 (高到低)</option>
+                <option value="JPY_ASC">日圓售價 (低到高)</option>
+                <option value="JPY_DESC">日圓售價 (高到低)</option>
+              </select>
+            </div>
           </div>
 
           {dbError && (
@@ -109,13 +149,13 @@ export default function App() {
              <div className="py-24 flex flex-col items-center justify-center border border-dashed border-[#DDD] bg-white text-[#999]">
                <div className="text-[10px] uppercase tracking-widest font-medium animate-pulse">載入中 Loading...</div>
              </div>
-          ) : products.length === 0 ? (
+          ) : displayedProducts.length === 0 ? (
              <div className="py-24 flex flex-col items-center justify-center border border-dashed border-[#DDD] bg-white text-[#999]">
-               <div className="text-[10px] uppercase tracking-widest font-medium">目前沒有商品，請新增 No Products</div>
+               <div className="text-[10px] uppercase tracking-widest font-medium">找不到符合的商品 No Match Found</div>
              </div>
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {products.map((product) => (
+              {displayedProducts.map((product) => (
                 <ProductCard key={product.id} product={product} onDelete={handleDeleteProduct} />
               ))}
             </div>
