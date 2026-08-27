@@ -29,9 +29,9 @@ export default function ProductCard({ product, onDelete }: ProductCardProps) {
         <div className="text-[10px] text-[#999] font-mono">#{product.productCode}</div>
         
         <div className="flex items-center gap-3 py-1 mt-auto">
-          <div className="text-xs">🇹🇼 <span className="font-semibold">NT$ {product.priceTwd.toLocaleString()}</span></div>
+          <div className="text-xs"> NT$ {product.priceTwd.toLocaleString()}</span></div>
           <div className="w-[1px] h-3 bg-[#EEE]"></div>
-          <div className="text-xs text-[#666]">🇯🇵 ¥ {product.priceJpy.toLocaleString()}</div>
+          <div className="text-xs"> ¥ {product.priceJpy.toLocaleString()}</div>
         </div>
 
         <div className="grid grid-cols-2 gap-2 mt-2">
