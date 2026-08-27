@@ -6,6 +6,7 @@ interface AddProductFormProps {
 }
 
 export default function AddProductForm({ onAdd }: AddProductFormProps) {
+  const [brand, setBrand] = useState<'GU' | 'UQ'>('UQ');
   const [imageUrl, setImageUrl] = useState('');
   const [productCode, setProductCode] = useState('');
   const [priceTwd, setPriceTwd] = useState('');
@@ -18,6 +19,7 @@ export default function AddProductForm({ onAdd }: AddProductFormProps) {
     if (!imageUrl || !productCode || !priceTwd || !priceJpy) return;
 
     onAdd({
+      brand,
       imageUrl,
       productCode,
       priceTwd: Number(priceTwd),
@@ -26,6 +28,7 @@ export default function AddProductForm({ onAdd }: AddProductFormProps) {
       urlJpy,
     });
 
+    setBrand('UQ');
     setImageUrl('');
     setProductCode('');
     setPriceTwd('');
@@ -64,7 +67,25 @@ export default function AddProductForm({ onAdd }: AddProductFormProps) {
             />
           </div>
           
-          <div className="hidden md:block"></div>
+          <div className="space-y-1">
+            <label className="text-[11px] text-[#666]">品牌 (Brand)</label>
+            <div className="flex gap-3 pt-1">
+              <button
+                type="button"
+                onClick={() => setBrand('UQ')}
+                className={`flex items-center justify-center w-8 h-8 font-bold text-[10px] transition-transform ${brand === 'UQ' ? 'ring-2 ring-black ring-offset-1' : 'opacity-40 hover:opacity-100'} bg-[#E60012] text-white`}
+              >
+                UQ
+              </button>
+              <button
+                type="button"
+                onClick={() => setBrand('GU')}
+                className={`flex items-center justify-center w-8 h-8 font-bold text-[10px] transition-transform ${brand === 'GU' ? 'ring-2 ring-black ring-offset-1' : 'opacity-40 hover:opacity-100'} bg-[#00174F] text-[#FFEA00]`}
+              >
+                GU
+              </button>
+            </div>
+          </div>
           
           <div className="space-y-1">
             <label className="text-[11px] text-[#666]">台灣售價 (TWD)</label>
