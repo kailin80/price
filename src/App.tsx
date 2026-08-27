@@ -123,13 +123,7 @@ export default function App() {
         </section>
       </main>
 
-      <footer className="h-10 px-6 md:px-12 flex items-center justify-between border-t border-[#EEEEEE] bg-white text-[10px] text-[#999] uppercase tracking-widest">
-        <div>UNIQLO & GU CURATION TOOL</div>
-        <div className="flex gap-4">
-          <span>Rate: 1 JPY = 0.21 TWD</span>
-          <span>Updated 2024.05.20</span>
-        </div>
-      </footer>
+
     </div>
   );
 }
