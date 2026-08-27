@@ -4,13 +4,8 @@ export default function Navbar() {
       <div className="flex items-center gap-3">
         <div className="w-8 h-8 bg-[#E60012] flex items-center justify-center text-white font-bold text-xs">U/G</div>
         <h1 className="text-lg font-medium tracking-tight text-[#1A1A1A]">
-          我的 U/G 選品型錄
+          U/G 選品型錄
         </h1>
-      </div>
-      <div className="hidden md:flex gap-6 text-sm text-[#666]">
-        <span className="border-b border-black text-black">選品清單</span>
-        <span className="cursor-pointer hover:text-black transition-colors">台日比價</span>
-        <span className="cursor-pointer hover:text-black transition-colors">設定</span>
       </div>
     </header>
   );
