@@ -18,6 +18,13 @@ export default function ProductCard({ product, onDelete }: ProductCardProps) {
       </button>
 
       <div className="aspect-[3/4] bg-[#F5F5F5] relative overflow-hidden">
+        <div className="absolute top-2 left-2 z-10">
+          {product.brand === 'GU' ? (
+            <div className="w-8 h-8 flex items-center justify-center bg-[#00174F] text-[#FFEA00] font-bold text-[10px] shadow-sm">GU</div>
+          ) : (
+            <div className="w-8 h-8 flex items-center justify-center bg-[#E60012] text-white font-bold text-[10px] shadow-sm">UQ</div>
+          )}
+        </div>
         <img
           src={product.imageUrl}
           alt={`Product ${product.productCode}`}
